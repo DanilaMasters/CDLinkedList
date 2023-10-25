@@ -152,9 +152,11 @@ public:
         //return tmp;
     }
 
-    void print() const {
-        for (CDLinkedList<T>::Iterator it = begin(); it != end(); ++it) {
+    void print() {
+        CDLinkedList<T>::Iterator it = begin();
+        for (unsigned int i = 0; i < size_; i++) {
             std::cout << *it << " ";
+            ++it;
         }
         std::cout << std::endl;
     }

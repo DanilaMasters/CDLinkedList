@@ -5,11 +5,8 @@
 template<typename T, typename C>
 void AssertEqual(const T& t, const C& c, const std::string& hint);
 
-
 void TestInsert();
 void TestRemove();
 void TestAll();
-
-
 
 #endif

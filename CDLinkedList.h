@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <exception>
+#include <sstream>
 
 template<typename T>
 class CDLinkedList {
@@ -89,6 +90,15 @@ public:
         return Iterator(trailer);
     }
 
+    T at(unsigned int ind) const {
+        CDLinkedList<int>::Iterator it = begin();
+        unsigned int j = 0;
+        while (j++ < ind) {
+            ++it;
+        }
+        return *it;
+    }
+
     inline void insertFront(const T& elem) {
         insert(begin(), elem);
     }
@@ -127,6 +137,21 @@ public:
         size_++;
     }
 
+    void insertAtIndex(unsigned int ind, const T& e) {
+    if (ind >= size_ && size_ != 0) {
+        std::ostringstream os;
+        os << "Index exceeds list size" << std::endl;
+        throw std::out_of_range(os.str());
+    } else {
+        unsigned int j = 0;
+        CDLinkedList<int>::Iterator it = begin();
+        while (j++ < ind) {
+            ++it;
+        }
+        insert(it, e);
+    }
+}
+
     inline void removeFront() {
         remove(begin());
     }   
@@ -160,6 +185,29 @@ public:
         }
         std::cout << std::endl;
     }
+
+    void merge(CDLinkedList& list) {
+        CDLinkedList<T>::Iterator it = list.begin();
+        unsigned int i = 0;
+        while (i++ < list.size()) {
+            this->insertBack(*it);
+            ++it;
+        }
+    }
+
+    /*void reverse() {
+        Node* ptr = begin().operator*();
+        while (ptr != NULL) {
+            Node* tmp = ptr->nxt;
+            ptr->nxt = ptr->prv;
+            ptr->prv = tmp;
+            if (tmp == NULL) {
+                end().operator* = start_ptr;
+                start_ptr = ptr;
+            }
+            ptr = tmp;
+        }
+    }*/
 
 private:
     Node* header;

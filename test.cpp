@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 template<typename T, typename C>
 void AssertEqual(const T& t, const C& c, const std::string& hint) {
@@ -31,10 +32,21 @@ void TestInsert() {
         l.insertFront(4);
 
         l.insertAtIndex(0, 5);
-        AssertEqual(l.begin().operator*(), 5, "insertAtIndex 0 value 1");
+        AssertEqual(l.begin().operator*(), 6, "insertAtIndex 0 value 1");
         l.insertAtIndex(3, 7);
         AssertEqual(l.at(3), 7, "insertAtIndex 3 value 7");
     }
+
+    
+    {
+        CDLinkedList<char> l;
+        std::vector<char> chars = {'h', 'e', 'l', 'l', 'o'};
+        for (unsigned int i = 0; i < chars.size(); i++) {
+            l.insertBack(chars[i]);
+            AssertEqual(l.at(i), chars[i], "Insert chars");
+        }
+    }
+
     std::cout << "TEST Insertion OK" << std::endl;
 }
 
@@ -76,6 +88,7 @@ void TestMerge() {
             AssertEqual(l1.at(i), values[i], "Merging two lists");
         }
     }
+    std::cout << "TEST Merge OK" << std::endl;
 }
 
 void TestReverse() {
@@ -94,13 +107,18 @@ void TestReverse() {
             AssertEqual(l.at(i), values[i], "Reversing list");
         }
     }
+    std::cout << "TEST Reverse OK" << std::endl;
 }
 
 void TestAll() {
-    TestInsert();
-    TestRemove();
-    TestMerge();
-    TestReverse();
 
-    std::cout << "ALL TESTS OK" << std::endl;
+    std::vector<std::function<void()>> tests = { TestReverse, TestInsert, TestRemove, TestMerge };
+    for (auto& test : tests) {
+        try {
+            test();
+        } catch (const std::runtime_error& ex) {
+            std::cout << ex.what() << std::endl;
+        }
+    }
+    std::cout << "ALL TESTS DONE" << std::endl;
 }

@@ -3,7 +3,7 @@
 #include <exception>
 #include <vector>
 
-template<> void CDLinkedList<char>::print();
+//template<> void CDLinkedList<char>::print();
 
 int main() {
 

@@ -3,8 +3,7 @@
 #include <exception>
 #include <sstream>
 
-template<typename T>
-CDLinkedList<T>::CDLinkedList() {
+CDLinkedList<char>::CDLinkedList() {
     header = new Node();
     trailer = new Node();
     header->next = trailer;
@@ -13,38 +12,39 @@ CDLinkedList<T>::CDLinkedList() {
     
     counterCreated++;
     counterAlive++;
+    insertBack('\0');
 }
 
-template<typename T>
-CDLinkedList<T>::CDLinkedList(const Node& node) : CDLinkedList() {
+
+CDLinkedList<char>::CDLinkedList(const Node& node) : CDLinkedList() {
     insertFront(node.elem);
 }
 
-template<typename T>
-CDLinkedList<T>::CDLinkedList(std::initializer_list<T> list) : CDLinkedList() {
+
+CDLinkedList<char>::CDLinkedList(std::initializer_list<char> list) : CDLinkedList() {
     for (auto item : list) {
         insertBack(item);
     }
 }
 
-template<typename T>
-CDLinkedList<T>::CDLinkedList(const CDLinkedList& list) : CDLinkedList() {
-    for (CDLinkedList<T>::Iterator it = list.begin(); it != list.end(); it++) {
+
+CDLinkedList<char>::CDLinkedList(const CDLinkedList& list) : CDLinkedList() {
+    for (CDLinkedList<char>::Iterator it = list.begin(); it != list.end(); it++) {
         insertBack(*it);
     }
 }
 
-template<typename T>
-CDLinkedList<T>::~CDLinkedList() {
+
+CDLinkedList<char>::~CDLinkedList() {
     while(!empty()) removeFront();
     delete header;
     delete trailer;
     counterAlive--;
 }
 
-template<typename T>
-T CDLinkedList<T>::at(unsigned int ind) const {
-    CDLinkedList<T>::Iterator it = begin();
+
+char CDLinkedList<char>::at(unsigned int ind) const {
+    CDLinkedList<char>::Iterator it = begin();
     unsigned int j = 0;
     while (j++ < ind) {
         ++it;
@@ -52,8 +52,8 @@ T CDLinkedList<T>::at(unsigned int ind) const {
     return *it;
 }
 
-template<typename T>
-void CDLinkedList<T>::insert(CDLinkedList<T>::Iterator it, const T& elem) {
+
+void CDLinkedList<char>::insert(CDLinkedList<char>::Iterator it, const char elem) {
     Node* new_node = new Node();
     Node* node = it.cursor;
     new_node->elem = elem;
@@ -83,15 +83,15 @@ void CDLinkedList<T>::insert(CDLinkedList<T>::Iterator it, const T& elem) {
     size_++;
 }
 
-template<typename T>
-void CDLinkedList<T>::insertAtIndex(unsigned int ind, const T& e) {
+
+void CDLinkedList<char>::insertAtIndex(unsigned int ind, const char e) {
     if (ind >= size_ && size_ != 0) {
         std::ostringstream os;
         os << "Index exceeds list size" << std::endl;
         throw std::out_of_range(os.str());
     } else {
         unsigned int j = 0;
-        CDLinkedList<T>::Iterator it = begin();
+        CDLinkedList<char>::Iterator it = begin();
         while (j++ < ind) {
             ++it;
         }
@@ -99,10 +99,10 @@ void CDLinkedList<T>::insertAtIndex(unsigned int ind, const T& e) {
     }   
 }
 
-template<typename T>
-void CDLinkedList<T>::remove(CDLinkedList<T>::Iterator it) {
+
+void CDLinkedList<char>::remove(CDLinkedList<char>::Iterator it) {
     if (empty()) throw std::length_error("List is empty");
-    //T tmp = *it;
+    //char tmp = *it;
     Node* u = it.cursor->prev;
     Node* w = it.cursor->next;
     u->next = w;
@@ -117,9 +117,9 @@ void CDLinkedList<T>::remove(CDLinkedList<T>::Iterator it) {
     //return tmp;
 }
 
-template<typename T>
-void CDLinkedList<T>::print() {
-    CDLinkedList<T>::Iterator it = begin();
+
+void CDLinkedList<char>::print() {
+    CDLinkedList<char>::Iterator it = begin();
     for (unsigned int i = 0; i < size_; i++) {
         std::cout << *it << " ";
         ++it;
@@ -127,7 +127,7 @@ void CDLinkedList<T>::print() {
     std::cout << std::endl;
 }
 
-// template<>
+// 
 // void CDLinkedList<char>::print() {
 //     CDLinkedList<char>::Iterator it = begin();
 //     for (unsigned int i = 0; i < size_; i++) {
@@ -137,9 +137,9 @@ void CDLinkedList<T>::print() {
 //     std::cout << std::endl;
 // }
 
-template<typename T>
-void CDLinkedList<T>::merge(CDLinkedList& list) {
-    CDLinkedList<T>::Iterator it = list.begin();
+
+void CDLinkedList<char>::merge(CDLinkedList& list) {
+    CDLinkedList<char>::Iterator it = list.begin();
     unsigned int i = 0;
     while (i++ < list.size()) {
         this->insertBack(*it);
@@ -147,8 +147,8 @@ void CDLinkedList<T>::merge(CDLinkedList& list) {
     }
 }
 
-template<typename T>
-void CDLinkedList<T>::reverse() {
+
+void CDLinkedList<char>::reverse() {
     Node* temp = header;
     header = trailer;
     trailer = temp; 

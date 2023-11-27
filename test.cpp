@@ -16,6 +16,35 @@ void AssertEqual(const T& t, const C& c, const std::string& hint) {
     }
 }
 
+void TestConstructors() {
+    {
+        CDLinkedList<int> l;
+        AssertEqual(l.size(), 0u, "Error: size != 0");
+        AssertEqual(l.begin(), l.end(), "Error: header->next != trailer->prev");
+    }
+
+    {
+        CDLinkedList<int>::Node node(5);
+        CDLinkedList<int> l(node);
+        AssertEqual(l.begin().operator*(), 5, "Error: node based constructor");
+    }  
+
+    {
+        CDLinkedList<int> l({ 1, 2, 3, 4 });
+        const int values[] = { 1, 2 ,3, 4 };
+        for (unsigned int i = 0; i < l.size(); i++) {
+            AssertEqual(l.at(i), values[i], "Error: constructor with initializer list");
+        }
+    }
+
+    {
+        CDLinkedList<char> l;
+        AssertEqual(l.begin().operator*(), '\0', "Error: char constructor specialization");
+    }
+
+    std::cout << "TESTS Constructors OK" << std::endl;
+}
+
 void TestInsert() {
     {
         CDLinkedList<int> l;
@@ -32,7 +61,7 @@ void TestInsert() {
         l.insertFront(4);
 
         l.insertAtIndex(0, 5);
-        AssertEqual(l.begin().operator*(), 6, "insertAtIndex 0 value 1");
+        AssertEqual(l.begin().operator*(), 5, "insertAtIndex 0 value 1");
         l.insertAtIndex(3, 7);
         AssertEqual(l.at(3), 7, "insertAtIndex 3 value 7");
     }
@@ -40,10 +69,12 @@ void TestInsert() {
     
     {
         CDLinkedList<char> l;
-        std::vector<char> chars = {'h', 'e', 'l', 'l', 'o'};
-        for (unsigned int i = 0; i < chars.size(); i++) {
-            l.insertBack(chars[i]);
-            AssertEqual(l.at(i), chars[i], "Insert chars");
+        const char symbols[] = {'h', 'e', 'l', 'l', 'o'};
+        unsigned int i = 0;
+        while (symbols[i] != '\0') {
+            l.insertBack(symbols[i]);
+            AssertEqual(l.at(i), symbols[i], "Insert chars");
+            i++;
         }
     }
 
@@ -112,13 +143,15 @@ void TestReverse() {
 
 void TestAll() {
 
-    std::vector<std::function<void()>> tests = { TestReverse, TestInsert, TestRemove, TestMerge };
+    std::vector<std::function<void()>> tests = { TestConstructors, TestInsert, TestRemove, TestMerge, TestReverse };
+    unsigned int count = tests.size();
     for (auto& test : tests) {
         try {
             test();
         } catch (const std::runtime_error& ex) {
+            count--;
             std::cout << ex.what() << std::endl;
         }
     }
-    std::cout << "ALL TESTS DONE" << std::endl;
+    std::cout << "\n***\n" << "DONE " << count << "/" << tests.size() <<  " GROUPED TESTS\n***" << std::endl;
 }

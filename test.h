@@ -9,4 +9,6 @@ void TestInsert();
 void TestRemove();
 void TestAll();
 
+#include "test.cpp"
+
 #endif

@@ -119,6 +119,20 @@ void TestMerge() {
             AssertEqual(l1.at(i), values[i], "Merging two lists");
         }
     }
+
+    {
+        CDLinkedList<int> l1({ 1, 2, 3, 4 });
+        CDLinkedList<double> l2({ 5.6, 6.5, 7.3, 8.99 });
+
+        auto res = merge(l1, l2);
+        
+        double resArray[] = { 1, 2, 3, 4, 5.6, 6.5, 7.3, 8.99 };
+
+        for (unsigned int i = 0; i < l1.size() + l2.size(); i++) {
+            AssertEqual(res.at(i), resArray[i], "Error: array merge funciton");
+        }
+    }
+
     std::cout << "TEST Merge OK" << std::endl;
 }
 

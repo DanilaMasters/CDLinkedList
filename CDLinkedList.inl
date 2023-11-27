@@ -162,3 +162,20 @@ void CDLinkedList<T>::reverse() {
         current = current->next;
     }
 }
+
+template<typename T, typename U>
+decltype(auto) merge(T& t, U& u) {
+    typename T::Iterator it1 = t.begin();
+    typename U::Iterator it2 = u.begin();
+    CDLinkedList<decltype(*it1 + *it2)> res;
+
+    for (unsigned int i = 0; i < t.size(); i++) {
+        res.insertBack(t.at(i));
+    }
+
+    for (unsigned int i = 0; i < u.size(); i++) {
+        res.insertBack(u.at(i));
+    }
+
+    return res;
+}

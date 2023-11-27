@@ -2,6 +2,7 @@
 #define CDLINKEDLIST_H
 
 #include <ostream>
+#include <iostream>
 #include <initializer_list>
 
 template<typename T>
@@ -61,6 +62,16 @@ public:
 
     inline static unsigned int getCounterCreated() { return counterCreated; }
     inline static unsigned int getCounterAlive() { return counterAlive; }
+
+    friend std::ostream& operator<<(std::ostream& os, const CDLinkedList<T> list) {
+        CDLinkedList<T>::Iterator it = list.begin();
+        for (unsigned int i = 0; i < list.size(); i++) {
+            std::cout << *it << " ";
+            ++it;
+        }
+        std::cout << std::endl;
+        return os;
+    }
 private:
     Node* header;
     Node* trailer;

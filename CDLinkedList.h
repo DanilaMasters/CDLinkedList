@@ -16,12 +16,19 @@ public:
         friend class CDLinkedList;
     public:
         Node() = default;
-        Node(T e) : elem(e), next(nullptr), prev(nullptr) {}
+        Node(T e, Node* next = nullptr, Node* prev = nullptr) : elem(e), next(next), prev(prev) {}
+        Node(const Node& node) {
+            this->elem = node.elem;
+            next = new Node();
+            prev = new Node();
+            next = node.next;
+            prev = node.prev;
+        }
     };
 public:
     class Iterator {
     public:
-        const T& operator*() const;
+        T& operator*() const;
         bool operator!=(const Iterator& it) const;
         bool operator==(const Iterator& it) const;
         Iterator& operator++();
@@ -39,16 +46,19 @@ public:
     };
 public:
     CDLinkedList();
-    CDLinkedList(const Node& node);
+    CDLinkedList(const Node&);
     CDLinkedList(std::initializer_list<T>);
-    CDLinkedList(const CDLinkedList& list);
+    CDLinkedList(const CDLinkedList&);
     ~CDLinkedList();
+
+    template<typename T1>
+    CDLinkedList(const CDLinkedList<T1>&);
 
     inline bool empty() const { return size_ == 0; }
     inline unsigned int size() const { return size_; }
     inline Iterator begin() const { return Iterator(header->next); }
     inline Iterator end() const { return Iterator(trailer); }
-    T at(unsigned int ind) const;
+    T& at(unsigned int ind) const;
     void insert(Iterator it, const T& elem);
     inline void insertFront(const T& elem) { insert(begin(), elem); }
     inline void insertBack(const T& elem) { insert(end(), elem); }
@@ -56,22 +66,33 @@ public:
     void remove(Iterator it);
     inline void removeFront() { remove(begin()); }   
     inline void removeBack() { remove(end()); }
-    void print();                                                                        // make const?
+    void print() const;                                                                        // make const?
     void merge(CDLinkedList& list);
     void reverse();
 
     inline static unsigned int getCounterCreated() { return counterCreated; }
     inline static unsigned int getCounterAlive() { return counterAlive; }
 
-    friend std::ostream& operator<<(std::ostream& os, const CDLinkedList<T> list) {
-        CDLinkedList<T>::Iterator it = list.begin();
-        for (unsigned int i = 0; i < list.size(); i++) {
-            std::cout << *it << " ";
-            ++it;
-        }
-        std::cout << std::endl;
-        return os;
+    CDLinkedList<T>& operator=(const CDLinkedList<T>&);
+
+    template<typename T1>
+    CDLinkedList<T>& operator=(const CDLinkedList<T1>&);
+
+    const T operator[](unsigned int index) const { 
+        return at(index);
     }
+
+    T& operator[](unsigned int index) {
+        return at(index);
+    }
+
+    template<typename> friend class CDLinkedList;
+
+    template<typename T1, typename T2>
+    friend CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>&, const CDLinkedList<T2>&);
+
+    template<typename U>
+    friend std::ostream& operator<<(std::ostream& os, const CDLinkedList<U>& list);
 private:
     Node* header;
     Node* trailer;
@@ -100,7 +121,7 @@ class CDLinkedList<char>{
 public:
     class Iterator {
     public:
-        const char& operator*() const;
+        char& operator*() const;
         bool operator!=(const Iterator& it) const;
         bool operator==(const Iterator& it) const;
         Iterator& operator++();
@@ -127,7 +148,7 @@ public:
     inline unsigned int size() const { return size_; }
     inline Iterator begin() const { return Iterator(header->next); }
     inline Iterator end() const { return Iterator(trailer); }
-    char at(unsigned int ind) const;
+    char& at(unsigned int ind) const;
     void insert(Iterator it, const char elem);
     inline void insertFront(const char elem) { insert(begin(), elem); }
     inline void insertBack(const char elem) { insert(--end(), elem); }
@@ -135,9 +156,19 @@ public:
     void remove(Iterator it);
     inline void removeFront() { remove(begin()); }   
     inline void removeBack() { remove(end()); }
-    void print();                                                                        // make const?
+    void print() const;
     void merge(CDLinkedList& list);
     void reverse();
+
+    char operator[](unsigned int index) const {
+        return at(index);
+    }
+
+    char& operator[](unsigned int index) {
+        return at(index);
+    }
+
+    friend std::ostream& operator<<(std::ostream&, const CDLinkedList<char>&);
 
     inline static unsigned int getCounterCreated() { return counterCreated; }
     inline static unsigned int getCounterAlive() { return counterAlive; }
@@ -152,6 +183,65 @@ private:
 
 unsigned int CDLinkedList<char>::counterCreated(0);
 unsigned int CDLinkedList<char>::counterAlive(0);
+
+template<typename T>
+class CDLinkedList<T*> {
+public:
+    class Node {
+        T elem{};
+        Node* next{};
+        Node* prev{};
+    public:
+        Node() = default;
+        Node(T elem, Node* next = nullptr, Node* prev = nullptr) : elem(elem), next(next), prev(prev) {}
+    };
+    class Iterator {
+    private:
+        Node* cursor;
+        explicit Iterator(const Node* cursor) : cursor(cursor) {}
+    public:
+        inline const T operator*() const { return cursor->elem; }
+        inline Iterator& operator++() { return cursor->next; }
+
+        friend class CDLinkedList;
+    };
+
+    CDLinkedList() {
+        header = new Node();
+        trailer = new Node();
+        header->next = trailer;
+        trailer->prev = header;
+        size_ = 0;
+    }
+    ~CDLinkedList() {
+        while(!empty()) remove(header->next);
+        delete header;
+        delete trailer;
+    }
+
+    bool empty() { return size_ == 0; }
+    void insert(Iterator it, const char elem) {
+        
+    }
+    void remove(Iterator& it) {
+        if (empty()) throw std::length_error("List is empty");
+        Node* u = it.cursor->prev;
+        Node* w = it.cursor->next;
+        u->next = w;
+        w->prev = u;
+        if (it.cursor== header->next) {
+            header->next = header->next->next;
+        } else if (it.cursor== trailer->prev) {
+            trailer->prev = trailer->prev->prev;
+        }
+        delete it.cursor;
+        size_--;
+    }
+private:
+    Node* header;
+    Node* trailer;
+    std::size_t size_;
+};
 
 #include "CDLinkedList.inl"
 #include "CDLinkedListS.inl"

@@ -16,15 +16,33 @@ void printCounter() {
               << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    bool runCounter = false;
+    if (argc > 1) {
+        switch(argc) {
+            case 2:
+                if (*argv[1] == 't') {
+                    TestAll();
+                }
+                if (*argv[1] == 'c') {
+                    runCounter = true;
+                }
+                break;
+            case 3:
+                if ((*argv[1] == 't' && *argv[2] == 'c') || (*argv[2] == 't' && *argv[1] == 'c')) {
+                    TestAll();
+                    runCounter = true;
+                }
 
-    TestAll();
+        }
+    }
     CDLinkedList<int> l1;
     CDLinkedList<int> l2;
 
-    printCounter<int>();
-    printCounter<char>();
-    
+    if (runCounter) {
+        printCounter<int>();
+        printCounter<char>();
+    }
 
     return 0;
 }

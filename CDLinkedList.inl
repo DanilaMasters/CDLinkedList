@@ -29,8 +29,16 @@ CDLinkedList<T>::CDLinkedList(std::initializer_list<T> list) : CDLinkedList() {
 
 template<typename T>
 CDLinkedList<T>::CDLinkedList(const CDLinkedList& list) : CDLinkedList() {
-    for (CDLinkedList<T>::Iterator it = list.begin(); it != list.end(); it++) {
-        insertBack(*it);
+    for (unsigned int i = 0; i < list.size(); i++) {
+        insertBack(list[i]);
+    }
+}
+
+template<typename T>
+    template<typename T1>
+CDLinkedList<T>::CDLinkedList(const CDLinkedList<T1>& list) : CDLinkedList() {
+    for (unsigned int i = 0; i < list.size(); i++) {
+        insertBack(list[i]);
     }
 }
 
@@ -43,11 +51,11 @@ CDLinkedList<T>::~CDLinkedList() {
 }
 
 template<typename T>
-T CDLinkedList<T>::at(unsigned int ind) const {
+T& CDLinkedList<T>::at(unsigned int ind) const {
     CDLinkedList<T>::Iterator it = begin();
-    unsigned int j = 0;
-    while (j++ < ind) {
-        ++it;
+    unsigned int i = 0;
+    while (i++ != ind) {
+        it++;
     }
     return *it;
 }
@@ -118,7 +126,7 @@ void CDLinkedList<T>::remove(CDLinkedList<T>::Iterator it) {
 }
 
 template<typename T>
-void CDLinkedList<T>::print() {
+void CDLinkedList<T>::print() const {
     CDLinkedList<T>::Iterator it = begin();
     for (unsigned int i = 0; i < size_; i++) {
         std::cout << *it << " ";
@@ -126,16 +134,6 @@ void CDLinkedList<T>::print() {
     }
     std::cout << std::endl;
 }
-
-// template<>
-// void CDLinkedList<char>::print() {
-//     CDLinkedList<char>::Iterator it = begin();
-//     for (unsigned int i = 0; i < size_; i++) {
-//         std::cout << *it;
-//         ++it;
-//     }
-//     std::cout << std::endl;
-// }
 
 template<typename T>
 void CDLinkedList<T>::merge(CDLinkedList& list) {
@@ -163,12 +161,88 @@ void CDLinkedList<T>::reverse() {
     }
 }
 
-template<typename T, typename U>
-decltype(auto) merge(T& t, U& u) {
-    typename T::Iterator it1 = t.begin();
-    typename U::Iterator it2 = u.begin();
-    CDLinkedList<decltype(*it1 + *it2)> res;
+template<typename T>
+CDLinkedList<T>& CDLinkedList<T>::operator=(const CDLinkedList<T>& other) {
+    
+    if (this == &other) {
+        return *this;
+    }
 
+    CDLinkedList<T> tmp(other);
+    std::swap(tmp.header->next, header->next);
+    std::swap(tmp.trailer->prev, trailer->prev);
+    if (size_ != tmp.size_) {
+        unsigned int tmpSize = size_;
+        size_ = tmp.size_;
+        tmp.size_ = tmpSize;
+    }
+
+    return *this;
+}
+
+template<typename T>
+    template<typename T1>
+CDLinkedList<T>& CDLinkedList<T>::operator=(const CDLinkedList<T1>& other) {
+
+    CDLinkedList<T> tmp(other);
+    std::swap(tmp.header->next, header->next);
+    std::swap(tmp.trailer->prev, trailer->prev);
+    if (size_ != tmp.size_) {
+        unsigned int tmpSize = size_;
+        size_ = tmp.size_;
+        tmp.size_ = tmpSize;
+    }
+
+    return *this;
+}
+
+// template<typename T>
+//     template<typename T1>
+// CDLinkedList<T>& CDLinkedList<T>::operator+(const CDLinkedList<T1>& rhs) {
+//     if (size_ != rhs.size_) throw std::runtime_error("Cannot sum two lists with different sizes");
+//     for (unsigned int i = 0; i < size_; i++) {
+//         (*this)[i] = (*this)[i] + rhs[i];
+//     }
+//     return *this;
+// }
+
+
+template<typename T1, typename T2>
+CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>& lhs, const CDLinkedList<T2>& rhs) {
+    if (lhs.size_ != rhs.size_) throw std::runtime_error("Cannot sum two lists with different sizes");
+    CDLinkedList<decltype(T1() + T2())> tmp;
+    for (unsigned int i = 0; i < lhs.size_; i++) {
+        tmp.insertBack(lhs[i] + rhs[i]);
+    }
+    return tmp;
+}
+
+template<>
+CDLinkedList<int> operator+(const CDLinkedList<int>& lhs, const CDLinkedList<int>& rhs) {
+    if (lhs.size_ != rhs.size_) throw std::runtime_error("Cannot sum two char lists with differenr sizes");
+    CDLinkedList<char> tmp;
+    for (std::size_t i = 0; i < lhs.size_; i++) {
+        tmp.insertBack(lhs[i] + rhs[i]);
+    }
+    return tmp;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const CDLinkedList<T>& list) {
+    typename CDLinkedList<T>::Iterator it = list.begin();
+    for (unsigned int i = 0; i < list.size(); i++) {
+        os << *it;
+        if (i != list.size() - 1)
+            os << " ";
+        ++it;
+    }
+    return os;
+}
+
+template<typename T, typename U>
+auto merge(CDLinkedList<T>& t, CDLinkedList<U>& u) {
+    CDLinkedList<decltype(T() + U())> res;
+    
     for (unsigned int i = 0; i < t.size(); i++) {
         res.insertBack(t.at(i));
     }

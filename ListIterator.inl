@@ -6,7 +6,7 @@ CDLinkedList<T>::Iterator::Iterator(Node* v) {
 }
 
 template<typename T>
-const T& CDLinkedList<T>::Iterator::operator*() const {
+T& CDLinkedList<T>::Iterator::operator*() const {
     return cursor->elem;
 }
 

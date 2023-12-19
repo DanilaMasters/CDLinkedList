@@ -43,7 +43,7 @@ CDLinkedList<char>::~CDLinkedList() {
 }
 
 
-char CDLinkedList<char>::at(unsigned int ind) const {
+char& CDLinkedList<char>::at(unsigned int ind) const {
     CDLinkedList<char>::Iterator it = begin();
     unsigned int j = 0;
     while (j++ < ind) {
@@ -114,28 +114,25 @@ void CDLinkedList<char>::remove(CDLinkedList<char>::Iterator it) {
     }
     delete it.cursor;
     size_--;
-    //return tmp;
 }
 
+std::ostream& operator<<(std::ostream& os, const CDLinkedList<char>& list) {
+    CDLinkedList<char>::Iterator it = list.begin();
+    for (unsigned int i = 0; i < list.size(); i++) {
+        os << *it;
+        ++it;
+    }
+    return os;
+}
 
-void CDLinkedList<char>::print() {
+void CDLinkedList<char>::print() const {
     CDLinkedList<char>::Iterator it = begin();
     for (unsigned int i = 0; i < size_; i++) {
-        std::cout << *it << " ";
+        std::cout << *it;
         ++it;
     }
     std::cout << std::endl;
 }
-
-// 
-// void CDLinkedList<char>::print() {
-//     CDLinkedList<char>::Iterator it = begin();
-//     for (unsigned int i = 0; i < size_; i++) {
-//         std::cout << *it;
-//         ++it;
-//     }
-//     std::cout << std::endl;
-// }
 
 
 void CDLinkedList<char>::merge(CDLinkedList& list) {

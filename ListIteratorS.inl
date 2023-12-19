@@ -6,7 +6,7 @@ CDLinkedList<char>::Iterator::Iterator(Node* v) {
 }
 
 
-const char& CDLinkedList<char>::Iterator::operator*() const {
+char& CDLinkedList<char>::Iterator::operator*() const {
     return cursor->elem;
 }
 

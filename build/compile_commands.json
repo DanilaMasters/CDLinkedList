@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/das89/prog/CDLinkedList/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/CDLinkedList.dir/test.cpp.o -c /home/das89/prog/CDLinkedList/test.cpp",
+  "file": "/home/das89/prog/CDLinkedList/test.cpp"
+},
+{
+  "directory": "/home/das89/prog/CDLinkedList/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/main.dir/main.cpp.o -c /home/das89/prog/CDLinkedList/main.cpp",
+  "file": "/home/das89/prog/CDLinkedList/main.cpp"
+}
+]

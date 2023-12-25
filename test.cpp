@@ -136,7 +136,7 @@ void TestMerge() {
             l1.insertBack(values2[i]);
         }
 
-        l1.merge(l2);
+        l1.append(l2);
 
         std::vector<int> values;
         values.reserve(values1.size() + values2.size());
@@ -154,12 +154,12 @@ void TestMerge() {
         CDLinkedList<int> l1({ 1, 2, 3, 4 });
         CDLinkedList<double> l2({ 5.6, 6.5, 7.3, 8.99 });
 
-        CDLinkedList<double> res = merge(l1, l2);
+        l1.append(l2);
         
-        double resArray[] = { 1, 2, 3, 4, 5.6, 6.5, 7.3, 8.99 };
+        double resArray[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
-        for (unsigned int i = 0; i < l1.size() + l2.size(); i++) {
-            AssertEqual(res.at(i), resArray[i], "Error: array merge funciton");
+        for (unsigned int i = 0; i < l1.size(); i++) {
+            AssertEqual(l1[i], resArray[i], "Error: array merge funciton");
         }
     }
 

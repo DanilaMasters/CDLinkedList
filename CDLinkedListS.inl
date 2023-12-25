@@ -116,6 +116,18 @@ void CDLinkedList<char>::remove(CDLinkedList<char>::Iterator it) {
     size_--;
 }
 
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const CDLinkedList<T*>& list) {
+    typename CDLinkedList<T*>::Iterator it = list.begin();
+    for (unsigned int i = 0; i < list.size(); i++) {
+        os << *it;
+        if (i != list.size() - 1)
+            os << " ";
+        ++it;
+    }
+    return os;
+}
+
 std::ostream& operator<<(std::ostream& os, const CDLinkedList<char>& list) {
     CDLinkedList<char>::Iterator it = list.begin();
     for (unsigned int i = 0; i < list.size(); i++) {
@@ -126,6 +138,7 @@ std::ostream& operator<<(std::ostream& os, const CDLinkedList<char>& list) {
 }
 
 void CDLinkedList<char>::print() const {
+    std::cout << "Class full spec" << std::endl;
     CDLinkedList<char>::Iterator it = begin();
     for (unsigned int i = 0; i < size_; i++) {
         std::cout << *it;
@@ -135,15 +148,16 @@ void CDLinkedList<char>::print() const {
 }
 
 
-void CDLinkedList<char>::merge(CDLinkedList& list) {
-    CDLinkedList<char>::Iterator it = list.begin();
+template<typename U>
+void CDLinkedList<char>::append(CDLinkedList<U>& list) {
+    std::cout << "Full char spec:" << std::endl;
+    typename CDLinkedList<U>::Iterator it = list.begin();
     unsigned int i = 0;
     while (i++ < list.size()) {
-        this->insertBack(*it);
+        this->insertBack(static_cast<char>(*it));
         ++it;
     }
 }
-
 
 void CDLinkedList<char>::reverse() {
     Node* temp = header;
@@ -158,4 +172,18 @@ void CDLinkedList<char>::reverse() {
         current->prev = temp; 
         current = current->next;
     }
+}
+
+template<typename U>
+CDLinkedList<char>& CDLinkedList<char>::operator=(const CDLinkedList<U>& other) {
+    CDLinkedList<char> tmp(other);
+    std::swap(tmp.header->next, header->next);
+    std::swap(tmp.trailer->prev, trailer->prev);
+    if (size_ != tmp.size_) {
+        unsigned int tmpSize = size_;
+        size_ = tmp.size_;
+        tmp.size_ = tmpSize;
+    }
+
+    return *this;
 }

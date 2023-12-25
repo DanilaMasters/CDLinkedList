@@ -36,12 +36,43 @@ int main(int argc, char* argv[]) {
 
         }
     }
-    CDLinkedList<int> l1;
-    CDLinkedList<int> l2;
+
+
+    CDLinkedList<float> l1 = {5.7, 4.4, 2.4};
+    CDLinkedList<int> l2 = {1, 2, 3, 4};
+
+    std::cout << l2 << std::endl;
+
+    CDLinkedList<int*> l3;
+    l3.insert(l3.begin(), 4);
+    l3.insert(l3.begin(), 5);
+    std::cout << l3 << std::endl;
+
+    CDLinkedList<char> l4{'h', 'e', 'l', 'l', 'o'};
+
+    std::cout << std::endl;
+    l2.append(l1);
+    std::cout << "l2 = " << l2 << std::endl;
+
+    l1.append(l2);
+    std::cout << "l1 = " << l1 << std::endl;
+
+    l3.append(l2);
+    std::cout << "l3 = " << l3 << std::endl;
+
+    CDLinkedList<int> l5{32, 87, 79, 82, 76, 68, 33};
+
+    l4.append(l5);
+    std::cout << "l4 = " << l4 << std::endl;
+
+    l1.print(); // float
+    l2.print(); // int
+    l4.print(); // char
 
     if (runCounter) {
         printCounter<int>();
         printCounter<char>();
+        printCounter<int*>();
     }
 
     return 0;

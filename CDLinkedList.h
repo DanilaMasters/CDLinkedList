@@ -13,7 +13,7 @@ public:
         T elem;
         Node* next;
         Node* prev;
-        template<typename> friend class CDLinkedList;
+        friend class CDLinkedList;
     public:
         Node() = default;
         Node(T e, Node* next = nullptr, Node* prev = nullptr) : elem(e), next(next), prev(prev) {}
@@ -35,7 +35,7 @@ public:
         Iterator operator++(int);
         Iterator& operator--();
         Iterator operator--(int);
-        friend class CDLinkedList;
+        template<typename> friend class CDLinkedList;
         friend std::ostream& operator<<(std::ostream& os, const Iterator& it) {
             os << *it;
             return os;
@@ -87,8 +87,11 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const CDLinkedList<U>& list);
 
     template<typename T1, typename T2>
-    friend CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>&, const CDLinkedList<T2>&);
+    friend CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>& lhs, const CDLinkedList<T2>& rhs);
 
+    friend CDLinkedList<int> operator+(const CDLinkedList<int>& lhs, const CDLinkedList<int>& rhs);
+
+    template<typename> friend class CDLinkedList;
     ~CDLinkedList();
 private:
     Node* header;
@@ -171,9 +174,6 @@ public:
     CDLinkedList<char>& operator=(const CDLinkedList<U>&);
 
     friend std::ostream& operator<<(std::ostream&, const CDLinkedList<char>&);
-
-    template<typename T1, typename T2>
-    friend CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>&, const CDLinkedList<T2>&);
 
     inline static unsigned int getCounterCreated() { return counterCreated; }
     inline static unsigned int getCounterAlive() { return counterAlive; }

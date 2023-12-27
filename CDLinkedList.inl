@@ -197,6 +197,7 @@ CDLinkedList<T>& CDLinkedList<T>::operator=(const CDLinkedList<T1>& other) {
     return *this;
 }
 
+
 template<typename T1, typename T2>
 CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>& lhs, const CDLinkedList<T2>& rhs) {
     if (lhs.size_ != rhs.size_) throw std::runtime_error("Cannot sum two lists with different sizes");
@@ -207,15 +208,14 @@ CDLinkedList<decltype(T1() + T2())> operator+(const CDLinkedList<T1>& lhs, const
     return tmp;
 }
 
-template<>
-CDLinkedList<int> operator+(const CDLinkedList<int>& lhs, const CDLinkedList<int>& rhs) {
-    if (lhs.size_ != rhs.size_) throw std::runtime_error("Cannot sum two char lists with differenr sizes");
-    CDLinkedList<char> tmp;
-    for (std::size_t i = 0; i < lhs.size_; i++) {
-        tmp.insertBack(lhs[i] + rhs[i]);
-    }
-    return tmp;
-}
+// CDLinkedList<int> operator+(const CDLinkedList<int>& lhs, const CDLinkedList<int>& rhs) {
+//     if (lhs.size_ != rhs.size_) throw std::runtime_error("Cannot sum two char lists with differenr sizes");
+//     CDLinkedList<int> tmp;
+//     for (std::size_t i = 0; i < lhs.size_; i++) {
+//         tmp.insertBack(lhs[i] + rhs[i]);
+//     }
+//     return tmp;
+// }
 
 
 template<typename T>
